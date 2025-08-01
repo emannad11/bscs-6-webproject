@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
+    <link rel="stylesheet" href="/css/style.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f7fa;
+            color: #333;
+        }
+        
+        .navbar {
+            background: #2c3e50;
+            color: white;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .navbar h1 {
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+        
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            transition: background 0.3s;
+        }
+        
+        .nav-links a:hover, .nav-links a.active {
+            background: #34495e;
+        }
+        
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .user-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: #3498db;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+        
+        .logout-btn {
+            background: #e74c3c;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        
+        .logout-btn:hover {
+            background: #c0392b;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
+        
+        .page-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+        
+        .page-header h2 {
+            font-size: 2.5rem;
+            color: #2c3e50;
+            margin-bottom: 0.5rem;
+        }
+        
+        .page-header p {
+            color: #7f8c8d;
+            font-size: 1.1rem;
+        }
+        
+        .prediction-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+        
+        .prediction-card {
+            background: white;
+            border-radius: 10px;
+            padding: 2rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .prediction-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .prediction-icon {
+            font-size: 2rem;
+        }
+        
+        .prediction-header h3 {
+            font-size: 1.5rem;
+            color: #2c3e50;
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: #2c3e50;
+        }
+        
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid #e1e5e9;
+            border-radius: 5px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+        
+        .form-group input:focus, .form-group select:focus {
+            outline: none;
+            border-color: #3498db;
+        }
+        
+        .slider-container {
+            margin: 1rem 0;
+        }
+        
+        .slider {
+            width: 100%;
+            height: 6px;
+            border-radius: 3px;
+            background: #e1e5e9;
+            outline: none;
+            -webkit-appearance: none;
+        }
+        
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #3498db;
+            cursor: pointer;
+        }
+        
+        .slider::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #3498db;
+            cursor: pointer;
+            border: none;
+        }
+        
+        .slider-value {
+            text-align: center;
+            font-weight: bold;
+            color: #3498db;
+            margin-top: 0.5rem;
+        }
+        
+        .predict-btn {
+            width: 100%;
+            background: #3498db;
+            color: white;
+            border: none;
+            padding: 1rem;
+            border-radius: 5px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        
+        .predict-btn:hover {
+            background: #2980b9;
+        }
+        
+        .predict-btn:disabled {
+            background: #bdc3c7;
+            cursor: not-allowed;
+        }
+        
+        .results-section {
+            background: white;
+            border-radius: 10px;
+            padding: 2rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-top: 2rem;
+        }
+        
+        .results-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .results-header h3 {
+            font-size: 1.5rem;
+            color: #2c3e50;
+        }
+        
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .result-item {
+            padding: 1rem;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border-left: 4px solid #3498db;
+        }
+        
+        .result-item.warning {
+            border-left-color: #f39c12;
+        }
+        
+        .result-item.danger {
+            border-left-color: #e74c3c;
+        }
+        
+        .result-label {
+            font-weight: 500;
+            color: #2c3e50;
+            margin-bottom: 0.5rem;
+        }
+        
+        .result-value {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #7f8c8d;
+        }
+        
+        .loading {
+            display: none;
+            text-align: center;
+            margin: 1rem 0;
+        }
+        
+        .spinner {
+            border: 2px solid #f3f3f3;
+            border-top: 2px solid #3498db;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            display: inline-block;
+            margin-right: 10px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .error-message {
+            background: #fee;
+            color: #e74c3c;
+            padding: 1rem;
+            border-radius: 5px;
+            margin: 1rem 0;
+            border: 1px solid #fcc;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <h1>🚨 Emergency Response System</h1>
+        <div class="nav-links">
+            <a href="/dashboard">Dashboard</a>
+            <a href="/predict" class="active">AI Prediction</a>
+            <a href="/incidents">Incidents</a>
+            <a href="/resources">Resources</a>
+        </div>
+        <div class="user-info">
+            <div class="user-avatar" id="userAvatar"></div>
+            <span id="userName">Loading...</span>
+            <button class="logout-btn" onclick="logout()">Logout</button>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="page-header">
+            <h2>🤖 AI Disaster Prediction</h2>
+            <p>Advanced machine learning models for earthquake and flood prediction</p>
+        </div>
+
+        <div class="prediction-grid">
+           
+            <div class="prediction-card">
+                <div class="prediction-header">
+                    <span class="prediction-icon">🌍</span>
+                    <h3>Earthquake Risk Prediction</h3>
+                </div>
+                
+                <form id="earthquakeForm">
+                    <div class="form-group">
+                        <label for="eq-location">Location</label>
+                        <select id="eq-location" name="location" required>
+                            <option value="">Select a city</option>
+                            <% if (cities && cities.length > 0) { %>
+                                <% cities.forEach(city => { %>
+                                    <option value="<%= city.name %>"><%= city.name %></option>
+                                <% }); %>
+                            <% } else { %>
+                                <option value="Karachi">Karachi</option>
+                                <option value="Lahore">Lahore</option>
+                                <option value="Islamabad">Islamabad</option>
+                                <option value="Rawalpindi">Rawalpindi</option>
+                                <option value="Faisalabad">Faisalabad</option>
+                            <% } %>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="eq-magnitude">Historical Magnitude (0-10)</label>
+                        <div class="slider-container">
+                            <input type="range" id="eq-magnitude" name="magnitude" min="0" max="10" step="0.1" value="3.0" class="slider">
+                            <div class="slider-value" id="eq-magnitude-value">3.0</div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="eq-depth">Depth (km)</label>
+                        <div class="slider-container">
+                            <input type="range" id="eq-depth" name="depth" min="0" max="100" step="1" value="10" class="slider">
+                            <div class="slider-value" id="eq-depth-value">10 km</div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="eq-frequency">Historical Frequency (0-10)</label>
+                        <div class="slider-container">
+                            <input type="range" id="eq-frequency" name="frequency" min="0" max="10" step="0.1" value="3.0" class="slider">
+                            <div class="slider-value" id="eq-frequency-value">3.0</div>
+                        </div>
+                    </div>
+                    
+                    <button type="submit" class="predict-btn" id="eq-predict-btn">
+                        🌍 Predict Earthquake Risk
+                    </button>
+                </form>
+                
+                <div class="loading" id="eq-loading">
+                    <div class="spinner"></div>
+                    Analyzing earthquake data...
+                </div>
+            </div>
+
+            <!-- Flood Prediction -->
+            <div class="prediction-card">
+                <div class="prediction-header">
+                    <span class="prediction-icon">🌊</span>
+                    <h3>Flood Risk Prediction</h3>
+                </div>
+                
+                <form id="floodForm">
+                    <div class="form-group">
+                        <label for="flood-location">Location</label>
+                        <select id="flood-location" name="location" required>
+                            <option value="">Select a city</option>
+                            <% if (cities && cities.length > 0) { %>
+                                <% cities.forEach(city => { %>
+                                    <option value="<%= city.name %>"><%= city.name %></option>
+                                <% }); %>
+                            <% } else { %>
+                                <option value="Karachi">Karachi</option>
+                                <option value="Lahore">Lahore</option>
+                                <option value="Islamabad">Islamabad</option>
+                                <option value="Rawalpindi">Rawalpindi</option>
+                                <option value="Faisalabad">Faisalabad</option>
+                            <% } %>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="flood-rainfall">Rainfall (mm)</label>
+                        <div class="slider-container">
+                            <input type="range" id="flood-rainfall" name="rainfall" min="0" max="500" step="5" value="50" class="slider">
+                            <div class="slider-value" id="flood-rainfall-value">50 mm</div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="flood-elevation">Elevation (m)</label>
+                        <div class="slider-container">
+                            <input type="range" id="flood-elevation" name="elevation" min="0" max="1000" step="10" value="100" class="slider">
+                            <div class="slider-value" id="flood-elevation-value">100 m</div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="flood-saturation">Soil Saturation (0-10)</label>
+                        <div class="slider-container">
+                            <input type="range" id="flood-saturation" name="soilSaturation" min="0" max="10" step="0.1" value="3.0" class="slider">
+                            <div class="slider-value" id="flood-saturation-value">3.0</div>
+                        </div>
+                    </div>
+                    
+                    <button type="submit" class="predict-btn" id="flood-predict-btn">
+                        🌊 Predict Flood Risk
+                    </button>
+                </form>
+                
+                <div class="loading" id="flood-loading">
+                    <div class="spinner"></div>
+                    Analyzing flood data...
+                </div>
+            </div>
+        </div>
+
+        <div class="results-section" id="results-section" style="display: none;">
+            <div class="results-header">
+                <span class="prediction-icon">✅</span>
+                <h3 id="results-title">Prediction Results</h3>
+            </div>
+            
+            <div class="results-grid" id="results-grid">
+
+            </div>
+        </div>
+    </div>
+
+    <script>
+
+        async function loadUserInfo() {
+            try {
+                const response = await fetch('/auth/profile');
+                if (response.ok) {
+                    const data = await response.json();
+                    const user = data.user;
+                    
+                    document.getElementById('userName').textContent = user.name;
+                    document.getElementById('userAvatar').textContent = user.name.charAt(0).toUpperCase();
+                } else {
+                    window.location.href = '/login';
+                }
+            } catch (error) {
+                console.error('Error loading user info:', error);
+                window.location.href = '/login';
+            }
+        }
+        
+        async function logout() {
+            try {
+                const response = await fetch('/auth/logout', {
+                    method: 'POST'
+                });
+                
+                if (response.ok) {
+                    window.location.href = '/login';
+                } else {
+                    console.error('Logout failed');
+                }
+            } catch (error) {
+                console.error('Error during logout:', error);
+                window.location.href = '/login';
+            }
+        }
+        
+        function updateSliderValue(sliderId, valueId, suffix = '') {
+            const slider = document.getElementById(sliderId);
+            const valueDisplay = document.getElementById(valueId);
+            
+            slider.addEventListener('input', () => {
+                valueDisplay.textContent = slider.value + suffix;
+            });
+        }
+        
+
+        updateSliderValue('eq-magnitude', 'eq-magnitude-value');
+        updateSliderValue('eq-depth', 'eq-depth-value', ' km');
+        updateSliderValue('eq-frequency', 'eq-frequency-value');
+        updateSliderValue('flood-rainfall', 'flood-rainfall-value', ' mm');
+        updateSliderValue('flood-elevation', 'flood-elevation-value', ' m');
+        updateSliderValue('flood-saturation', 'flood-saturation-value');
+        
+       
+        document.getElementById('earthquakeForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const formData = new FormData(e.target);
+            const data = Object.fromEntries(formData);
+            
+            const btn = document.getElementById('eq-predict-btn');
+            const loading = document.getElementById('eq-loading');
+            
+            btn.disabled = true;
+            loading.style.display = 'block';
+            
+            try {
+                const response = await fetch('/predict/earthquake', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data)
+                });
+                
+                const result = await response.json();
+                
+                if (result.error) {
+                    throw new Error(result.error);
+                }
+                
+                displayResults('Earthquake Prediction Results', result);
+                
+            } catch (error) {
+                console.error('Earthquake prediction error:', error);
+                displayError('Earthquake prediction failed: ' + error.message);
+            } finally {
+                btn.disabled = false;
+                loading.style.display = 'none';
+            }
+        });
+        
+        
+        document.getElementById('floodForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const formData = new FormData(e.target);
+            const data = Object.fromEntries(formData);
+            
+            const btn = document.getElementById('flood-predict-btn');
+            const loading = document.getElementById('flood-loading');
+            
+            btn.disabled = true;
+            loading.style.display = 'block';
+            
+            try {
+                const response = await fetch('/predict/flood', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data)
+                });
+                
+                const result = await response.json();
+                
+                if (result.error) {
+                    throw new Error(result.error);
+                }
+                
+                displayResults('Flood Prediction Results', result);
+                
+            } catch (error) {
+                console.error('Flood prediction error:', error);
+                displayError('Flood prediction failed: ' + error.message);
+            } finally {
+                btn.disabled = false;
+                loading.style.display = 'none';
+            }
+        });
+        
+        function displayResults(title, data) {
+            const resultsSection = document.getElementById('results-section');
+            const resultsTitle = document.getElementById('results-title');
+            const resultsGrid = document.getElementById('results-grid');
+            
+            resultsTitle.textContent = title;
+            resultsGrid.innerHTML = '';
+            
+
+            for (const [key, value] of Object.entries(data)) {
+                if (key !== 'error' && key !== 'success') {
+                    const resultItem = document.createElement('div');
+                    resultItem.className = 'result-item';
+                    
+
+                    if (key.toLowerCase().includes('risk') && value) {
+                        const riskLevel = value.toString().toLowerCase();
+                        if (riskLevel.includes('high') || riskLevel.includes('critical')) {
+                            resultItem.classList.add('danger');
+                        } else if (riskLevel.includes('medium') || riskLevel.includes('moderate')) {
+                            resultItem.classList.add('warning');
+                        }
+                    }
+                    
+                    resultItem.innerHTML = `
+                        <div class="result-label">${formatLabel(key)}:</div>
+                        <div class="result-value">${value || 'Not available'}</div>
+                    `;
+                    
+                    resultsGrid.appendChild(resultItem);
+                }
+            }
+            
+            resultsSection.style.display = 'block';
+            resultsSection.scrollIntoView({ behavior: 'smooth' });
+        }
+        
+        
+        function displayError(message) {
+            const resultsSection = document.getElementById('results-section');
+            const resultsTitle = document.getElementById('results-title');
+            const resultsGrid = document.getElementById('results-grid');
+            
+            resultsTitle.textContent = 'Prediction Error';
+            resultsGrid.innerHTML = `
+                <div class="error-message">
+                    ${message}
+                </div>
+            `;
+            
+            resultsSection.style.display = 'block';
+            resultsSection.scrollIntoView({ behavior: 'smooth' });
+        }
+        
+
+        function formatLabel(key) {
+            return key
+                .replace(/([A-Z])/g, ' $1')
+                .replace(/^./, str => str.toUpperCase())
+                .replace(/([a-z])([A-Z])/g, '$1 $2');
+        }
+        
+       
+        document.addEventListener('DOMContentLoaded', () => {
+            loadUserInfo();
+        });
+    </script>
+</body>
+</html>
+

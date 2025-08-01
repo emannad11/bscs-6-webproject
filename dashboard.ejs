@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
+    <link rel="stylesheet" href="/css/style.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f7fa;
+            color: #333;
+        }
+        
+        .navbar {
+            background: #2c3e50;
+            color: white;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .navbar h1 {
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+        
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            transition: background 0.3s;
+        }
+        
+        .nav-links a:hover, .nav-links a.active {
+            background: #34495e;
+        }
+        
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .user-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: #3498db;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+        
+        .logout-btn {
+            background: #e74c3c;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        
+        .logout-btn:hover {
+            background: #c0392b;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
+        
+        .dashboard-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+        
+        .dashboard-header h2 {
+            font-size: 2.5rem;
+            color: #2c3e50;
+            margin-bottom: 0.5rem;
+        }
+        
+        .dashboard-header p {
+            color: #7f8c8d;
+            font-size: 1.1rem;
+        }
+        
+        .status-overview {
+            background: white;
+            border-radius: 10px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .status-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .status-header h3 {
+            font-size: 1.5rem;
+            color: #2c3e50;
+        }
+        
+        .status-icon {
+            font-size: 1.5rem;
+        }
+        
+        .status-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .status-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border-left: 4px solid #3498db;
+        }
+        
+        .status-item.warning {
+            border-left-color: #f39c12;
+        }
+        
+        .status-item.danger {
+            border-left-color: #e74c3c;
+        }
+        
+        .status-item.success {
+            border-left-color: #27ae60;
+        }
+        
+        .status-label {
+            font-weight: 500;
+            color: #2c3e50;
+        }
+        
+        .status-value {
+            font-weight: bold;
+            color: #7f8c8d;
+        }
+        
+        .refresh-btn {
+            background: #3498db;
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background 0.3s;
+            margin-top: 1rem;
+        }
+        
+        .refresh-btn:hover {
+            background: #2980b9;
+        }
+        
+        .refresh-btn:disabled {
+            background: #bdc3c7;
+            cursor: not-allowed;
+        }
+        
+        .quick-actions {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+        
+        .action-card {
+            background: white;
+            border-radius: 10px;
+            padding: 2rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            text-align: center;
+            transition: transform 0.3s;
+        }
+        
+        .action-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .action-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+        
+        .action-card h4 {
+            font-size: 1.3rem;
+            color: #2c3e50;
+            margin-bottom: 0.5rem;
+        }
+        
+        .action-card p {
+            color: #7f8c8d;
+            margin-bottom: 1.5rem;
+        }
+        
+        .action-btn {
+            background: #3498db;
+            color: white;
+            text-decoration: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 5px;
+            display: inline-block;
+            transition: background 0.3s;
+        }
+        
+        .action-btn:hover {
+            background: #2980b9;
+        }
+        
+        .loading {
+            display: none;
+            text-align: center;
+            margin: 1rem 0;
+        }
+        
+        .spinner {
+            border: 2px solid #f3f3f3;
+            border-top: 2px solid #3498db;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            animation: spin 1s linear infinite;
+            display: inline-block;
+            margin-right: 10px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .last-updated {
+            text-align: center;
+            color: #7f8c8d;
+            font-size: 0.9rem;
+            margin-top: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <h1>🚨 Emergency Response System</h1>
+        <div class="nav-links">
+            <a href="/dashboard" class="active">Dashboard</a>
+            <a href="/predict">AI Prediction</a>
+            <a href="/incidents">Incidents</a>
+            <a href="/resources">Resources</a>
+        </div>
+        <div class="user-info">
+            <div class="user-avatar" id="userAvatar"></div>
+            <span id="userName">Loading...</span>
+            <button class="logout-btn" onclick="logout()">Logout</button>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="dashboard-header">
+            <h2>Emergency Status Overview</h2>
+            <p>Real-time monitoring and disaster prediction system</p>
+        </div>
+
+        <div class="status-overview">
+            <div class="status-header">
+                <span class="status-icon">📊</span>
+                <h3>Overall Status: <span id="overallStatus">Loading...</span></h3>
+            </div>
+            
+            <div class="status-grid">
+                <div class="status-item" id="riskLevelItem">
+                    <span class="status-label">Risk Level:</span>
+                    <span class="status-value" id="riskLevel">Loading...</span>
+                </div>
+                
+                <div class="status-item">
+                    <span class="status-label">Location:</span>
+                    <span class="status-value" id="location">Loading...</span>
+                </div>
+                
+                <div class="status-item">
+                    <span class="status-label">Active Emergencies:</span>
+                    <span class="status-value" id="activeEmergencies"><%= incidents ? incidents.length : 0 %></span>
+                </div>
+                
+                <div class="status-item">
+                    <span class="status-label">Available Resources:</span>
+                    <span class="status-value" id="availableResources">
+                        <%= resources ? resources.filter(r => r.status === 'Available').length : 0 %>
+                    </span>
+                </div>
+            </div>
+            
+            <button class="refresh-btn" onclick="refreshStatus()" id="refreshBtn">
+                🔄 Refresh Status
+            </button>
+            
+            <div class="loading" id="loading">
+                <div class="spinner"></div>
+                Updating status...
+            </div>
+            
+            <div class="last-updated">
+                Last Updated: <span id="lastUpdated">Just now</span>
+            </div>
+        </div>
+
+        <div class="quick-actions">
+            <div class="action-card">
+                <div class="action-icon">🤖</div>
+                <h4>AI Prediction</h4>
+                <p>Use machine learning to predict earthquake and flood risks</p>
+                <a href="/predict" class="action-btn">Start Prediction</a>
+            </div>
+            
+            <div class="action-card">
+                <div class="action-icon">📋</div>
+                <h4>Report Incident</h4>
+                <p>Report new emergency incidents and track existing ones</p>
+                <a href="/incidents" class="action-btn">View Incidents</a>
+            </div>
+            
+            <div class="action-card">
+                <div class="action-icon">🚑</div>
+                <h4>Emergency Resources</h4>
+                <p>Manage and deploy emergency response resources</p>
+                <a href="/resources" class="action-btn">Manage Resources</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    
+        async function loadUserInfo() {
+            try {
+                const response = await fetch('/auth/profile');
+                if (response.ok) {
+                    const data = await response.json();
+                    const user = data.user;
+                    
+                    document.getElementById('userName').textContent = user.name;
+                    document.getElementById('userAvatar').textContent = user.name.charAt(0).toUpperCase();
+                } else {
+                    window.location.href = '/login';
+                }
+            } catch (error) {
+                console.error('Error loading user info:', error);
+                window.location.href = '/login';
+            }
+        }
+        
+
+        async function refreshStatus() {
+            const refreshBtn = document.getElementById('refreshBtn');
+            const loading = document.getElementById('loading');
+            
+            refreshBtn.disabled = true;
+            loading.style.display = 'block';
+            
+            try {
+                const response = await fetch('/api/emergency-status?location=Pakistan');
+                const data = await response.json();
+                
+                
+                document.getElementById('overallStatus').textContent = data.status || 'Normal';
+                document.getElementById('riskLevel').textContent = data.riskLevel || 'Low';
+                document.getElementById('location').textContent = data.location || 'Pakistan';
+                
+            
+                const riskLevelItem = document.getElementById('riskLevelItem');
+                riskLevelItem.className = 'status-item';
+                
+                const riskLevel = (data.riskLevel || 'Low').toLowerCase();
+                if (riskLevel.includes('high') || riskLevel.includes('critical')) {
+                    riskLevelItem.classList.add('danger');
+                } else if (riskLevel.includes('medium') || riskLevel.includes('moderate')) {
+                    riskLevelItem.classList.add('warning');
+                } else {
+                    riskLevelItem.classList.add('success');
+                }
+                
+                
+                document.getElementById('lastUpdated').textContent = new Date().toLocaleString();
+                
+            } catch (error) {
+                console.error('Error refreshing status:', error);
+                document.getElementById('overallStatus').textContent = 'Error loading status';
+                document.getElementById('riskLevel').textContent = 'Unknown';
+                document.getElementById('location').textContent = 'Unknown';
+            } finally {
+                refreshBtn.disabled = false;
+                loading.style.display = 'none';
+            }
+        }
+        
+        
+        async function logout() {
+            try {
+                const response = await fetch('/auth/logout', {
+                    method: 'POST'
+                });
+                
+                if (response.ok) {
+                    window.location.href = '/login';
+                } else {
+                    console.error('Logout failed');
+                }
+            } catch (error) {
+                console.error('Error during logout:', error);
+        
+                window.location.href = '/login';
+            }
+        }
+        
+        document.addEventListener('DOMContentLoaded', () => {
+            loadUserInfo();
+            refreshStatus();
+        });
+    </script>
+</body>
+</html>
+
